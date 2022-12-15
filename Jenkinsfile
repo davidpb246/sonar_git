@@ -1,19 +1,18 @@
-@Library("mylibs") _
-pipeline {
-  agent any
-  tools {
-    maven 'maven2'
-  }
-  stages{
-    stage("Maven Build"){
-      steps{
-        sh "mvn clean package"
-      }
+node{
+// demo
+   stage('SCM Checkout'){
+     git 'https://github.com/davidpb246/sonar_git'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'maven-3', type: 'maven'
+      sh "${mvnHome}/bin/mvn package"
+   }
+
+   stage('SonarQube Analysis') {
+        def mvnHome =  tool name: 'maven-3', type: 'maven'
+        withSonarQubeEnv('sonar-server') {
+          sh "${mvnHome}/bin/mvn sonar:sonar"
+        }
     }
-    stage("Deploy To Dev"){
-      steps{
-        tomcatDeploy("tomcat-dev","ec2-user",["172.31.13.89","172.31.13.89"])
-      }
-    }
-  }
 }
