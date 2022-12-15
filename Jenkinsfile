@@ -2,8 +2,7 @@ node{
 // demo
    stage('SCM Checkout'){
      git 'https://github.com/davidpb246/sonar_git'
-     git url: 'https://github.com/davidpb246/sonar_git', branch: '*/main',
-        credentialsId: 'git_creds'
+     git url: 'https://github.com/davidpb246/sonar_git', branch: 'main', credentialsId: 'git_creds'
    }
    stage('Compile-Package'){
       // Get maven home path
